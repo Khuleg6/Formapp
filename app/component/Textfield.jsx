@@ -8,7 +8,6 @@ export const Textfield = (props) => {
     error,
     type = "text",
     required = false,
-    onBlur,
   } = props;
   return (
     <div className="space-y-2">
@@ -16,7 +15,6 @@ export const Textfield = (props) => {
         {label} {required && <span className="text-[#E14942]">*</span>}
       </label>
       <input
-        onBlur={onBlur}
         name={name}
         className={`w-full h-11 rounded-lg border  p-3 ${error ? "border-[#E14942]" : "border-[#CBD5E1]"}`}
         value={value}
