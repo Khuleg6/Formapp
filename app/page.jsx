@@ -6,6 +6,22 @@ import { ThirdStep } from "./component/ThirdStep";
 
 export default function Home() {
   const [step, setStep] = useState(0);
+  const [formData, setFormData] = useState({
+    firstname: "",
+    lastname: "",
+    username: "",
+    email: "",
+    phonenumb: "",
+    password: "",
+    confirmpass: "",
+  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((step) => ({
+      ...step,
+      [name]: value,
+    }));
+  };
   const steps = [FirstStep, SecondStep, ThirdStep];
 
   const handleNextStep = () => {
@@ -18,6 +34,8 @@ export default function Home() {
   return (
     <div className="w-full h-screen flex justify-center items-center bg-[#f4f4f4]">
       <StepForm
+        formData={formData}
+        handleChange={handleChange}
         handleNextStep={handleNextStep}
         handlePreviusStep={handlePreviusStep}
       />

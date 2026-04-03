@@ -3,11 +3,8 @@ import { useState } from "react";
 import { Button } from "./Button";
 import { Textfield } from "./Textfield";
 
-export const SecondStep = ({ handlePreviusStep }) => {
-  const [email, setEmail] = useState("");
-  const [phonenumb, setPhonenumb] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmpass, setConfirmpass] = useState("");
+export const SecondStep = ({ handlePreviusStep, formData, handleChange }) => {
+  const { email, phonenumb, password, confirmpass } = formData;
 
   const isEmailValid = () => {
     if (email === "") return "Email cannot be empty...";
@@ -21,11 +18,32 @@ export const SecondStep = ({ handlePreviusStep }) => {
       return "Phone number must be start with 7 or up to 9.";
   };
   const isPasswordValid = () => {
-    if (password === "") return "Phone number cannot be empty...";
-    if (!/^[987]\d{7}$/.test(password))
-      return "Phone number must be start with 7 or up to 9.";
-  };
+    // 1. Хоосон эсэхийг шалгах
+    if (password === "") return "Password cannot be empty...";
 
+    // 2. Уртыг шалгах (хамгийн багадаа 8 тэмдэгт)
+    if (password.length < 8)
+      return "Password must be at least 8 characters long.";
+
+    // 3. Жижиг үсэг орсон эсэхийг шалгах
+    if (!/[a-z]/.test(password))
+      return "At least one lowercase letter is required.";
+
+    // 4. Том үсэг орсон эсэхийг шалгах
+    if (!/[A-Z]/.test(password))
+      return "At least one uppercase letter is required.";
+
+    // 5. Тоо орсон эсэхийг шалгах
+    if (!/\d/.test(password)) return "At least one number is required.";
+
+    // Хэрэв бүх нөхцөл биелсэн бол юу ч буцаахгүй (undefined)
+    return null;
+  };
+  const isConfirmPassValid = () => {
+    if (confirmpass === "") return "Please confirm your password.";
+    if (confirmpass !== password) return "Passwords do not match.";
+    return null;
+  };
   const isHavingError = () => {
     return isEmailValid() || isPhoneNumValid() || isPasswordValid();
   };
@@ -39,40 +57,39 @@ export const SecondStep = ({ handlePreviusStep }) => {
         </p>
 
         <Textfield
+          name="email"
           value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
+          onChange={handleChange}
           error={isEmailValid}
           required={true}
           label="Email"
           placeholder="John@edu.mn"
         />
         <Textfield
+          name="phonenumb"
           value={phonenumb}
-          onChange={(e) => {
-            setPhonenumb(e.target.value);
-          }}
+          onChange={handleChange}
           error={isPhoneNumValid}
           required={true}
           label="Enter Phone Number"
           placeholder="88888888"
         />
         <Textfield
+          name="password"
           value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
+          onChange={handleChange}
           error={isPasswordValid}
           required={true}
           label="Password"
+          type="password"
         />
         <Textfield
+          name="confirmpass"
           value={confirmpass}
-          onChange={(e) => {
-            setConfirmpass(e.target.value);
-          }}
+          error={isConfirmPassValid}
+          onChange={handleChange}
           required={true}
+          type="password"
           label="Confirm Password"
         />
       </div>
