@@ -22,7 +22,7 @@ export const Textfield = (props) => {
         placeholder={placeholder}
         type={type}
       />
-      {error && <p className="text-sm text-[#E14942]">{error}</p>}
+      {error && <p className="text-sm text-[#E14942]">{error()}</p>}
     </div>
   );
 };

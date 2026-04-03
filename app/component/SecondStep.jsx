@@ -3,7 +3,12 @@ import { useState } from "react";
 import { Button } from "./Button";
 import { Textfield } from "./Textfield";
 
-export const SecondStep = ({ handlePreviusStep, formData, handleChange }) => {
+export const SecondStep = ({
+  handlePreviusStep,
+  formData,
+  handleChange,
+  handleNextStep,
+}) => {
   const { email, phonenumb, password, confirmpass } = formData;
 
   const isEmailValid = () => {
@@ -97,7 +102,9 @@ export const SecondStep = ({ handlePreviusStep, formData, handleChange }) => {
         <Button onClick={handlePreviusStep} disabled={false}>
           Prev
         </Button>
-        <Button disabled={isHavingError()}>Next</Button>
+        <Button onClick={handleNextStep} disabled={isHavingError()}>
+          Next
+        </Button>
       </div>
     </div>
   );

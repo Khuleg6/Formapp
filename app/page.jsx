@@ -5,7 +5,7 @@ import { SecondStep } from "./component/SecondStep";
 import { ThirdStep } from "./component/ThirdStep";
 
 export default function Home() {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(2);
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
@@ -14,6 +14,8 @@ export default function Home() {
     phonenumb: "",
     password: "",
     confirmpass: "",
+    birthday: "",
+    image: "",
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
