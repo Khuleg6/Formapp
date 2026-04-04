@@ -1,10 +1,17 @@
 import { useState } from "react";
 import { Textfield } from "./Textfield";
 import { Button } from "./Button";
-import { Imgfield } from "../Imgfield";
+import { Imgfield } from "./Imgfield";
 
-export const ThirdStep = ({ formData, handleChange, handlePreviusStep }) => {
-  const { birthday } = formData;
+export const ThirdStep = ({
+  formData,
+  handleChange,
+  handlePreviusStep,
+  handleRemoveImage,
+  handleNextStep,
+}) => {
+  const { birthday, image } = formData;
+
   return (
     <div className="w-120 min-h-[655px] bg-white rounded-lg p-8 shadow-xl">
       <div className="space-y-2">
@@ -23,15 +30,23 @@ export const ThirdStep = ({ formData, handleChange, handlePreviusStep }) => {
           label="Date of Birth"
         />
         <Imgfield
-          name="profileimg"
-          value={birthday}
-          onChange={handleChange}
+          name="image"
+          value={image}
+          handleChange={handleChange}
           required={true}
           label="Profile image"
+          handleRemoveImage={() => {
+            // formData доторх image-ийг хоосон болгох
+            handleChange({ target: { name: "image", value: "" } });
+          }}
         />
       </div>
+
       <div className="flex gap-2 my-10">
-        <Button onClick={handlePreviusStep}>Prev</Button>
+        <Button className=" h-full w-full" onClick={handlePreviusStep}>
+          Prev
+        </Button>
+        <Button onClick={handleNextStep}>Complete</Button>
       </div>
     </div>
   );
