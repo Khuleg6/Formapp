@@ -45,9 +45,12 @@ export default function Home() {
     <div className="w-full h-screen flex justify-center items-center bg-[#f4f4f4]">
       <StepForm
         formData={formData}
+        setFormData={setFormData}
         handleChange={handleChange}
         handleNextStep={handleNextStep}
         handlePreviusStep={handlePreviusStep}
+        currentStep={step + 1}
+        totalSteps={steps.length - 1}
       />
     </div>
   );

@@ -4,10 +4,8 @@ export const Imgfield = (props) => {
     label,
     handleChange,
     value,
-    onChange,
     error,
     handleRemoveImage,
-
     required = false,
   } = props;
   return (
@@ -20,6 +18,9 @@ export const Imgfield = (props) => {
         <input
           name={name}
           onChange={handleChange}
+          onClick={(e) => {
+            e.target.value = "";
+          }}
           className="absolute h-full w-full cursor-pointer opacity-0"
           type="file"
           accept="image/*"
@@ -50,7 +51,7 @@ export const Imgfield = (props) => {
           <>
             <img
               src={value}
-              className="absolute h-full w-full object-contain"
+              className="absolute h-full w-full object-cover bg-center"
               alt=""
             />
             <div

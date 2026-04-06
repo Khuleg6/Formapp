@@ -4,20 +4,44 @@ import { Textfield } from "./Textfield";
 import { Button } from "./Button";
 import { useState } from "react";
 
-export const FirstStep = ({ formData, handleChange, handleNextStep }) => {
+export const FirstStep = ({
+  formData,
+  setFormData,
+  handleChange,
+  handleNextStep,
+  currentStep,
+  totalSteps,
+}) => {
   const { firstname, lastname, username } = formData;
+  const [errors, setErrors] = useState({
+    firstnameError: "",
+    lastnameError: "",
+    usernameError: "",
+  });
 
-  const isHavingError = () => {
-    return isFirstNameValid() || isLastNameValid() || isUserNameValid();
-  };
+  let isValid = true;
 
-  const isFirstNameValid = () => {
-    if (firstname === "") return "First name cannot be empty...";
-    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,50}$/.test(firstname))
-      return "First name cannot contain special characters or numbers.";
+  const isFirstNameValid = (firstname) => {
+    if (firstname === "") {
+      setErrors({
+        ...errors,
+        firstnameError: "First name cannot be empty...",
+      });
+      isValid = false;
+    } else if (!/^[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,50}$/.test(firstname)) {
+      setErrors({
+        ...errors,
+        firstnameError:
+          "First name cannot contain special characters or numbers.",
+      });
+      isValid = false;
+    } else {
+      setErrors({ ...errors, firstnameError: "" });
+      isValid = true;
+    }
   };
   const isLastNameValid = () => {
-    if (lastname === "") return "Last name cannot be empty...";
+    if (lastname === "") return "Last name cannot be  ...";
     if (!/^[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,50}$/.test(lastname))
       return "Last name cannot contain special characters or numbers.";
   };
@@ -25,6 +49,21 @@ export const FirstStep = ({ formData, handleChange, handleNextStep }) => {
     if (username === "") return "Username cannot be empty...";
     if (!/^[a-zA-Z0-9](?:[a-zA-Z0-9_]{1,18}[a-zA-Z0-9])?$/.test(username))
       return "username cannot start with special characters";
+  };
+
+  // const getErrorMessage = (validationfunc) => {
+  //   if (!isSubmited) return "";
+  //   return validationfunc();
+  // };
+
+  const isHavingError = () => {
+    if (isValid) {
+      handleNext();
+    }
+  };
+
+  const handleNext = () => {
+    handleNextStep();
   };
   return (
     <div className="w-120 min-h-[655px] bg-white rounded-lg p-8 shadow-xl">
@@ -38,8 +77,11 @@ export const FirstStep = ({ formData, handleChange, handleNextStep }) => {
         <Textfield
           name="firstname"
           value={firstname}
-          onChange={handleChange}
-          error={isFirstNameValid}
+          onChange={(e) => {
+            setFormData({ ...formData, firstname: e.target.value });
+            isFirstNameValid(e.target.value);
+          }}
+          error={errors.firstnameError}
           required={true}
           label="First name"
           placeholder="John..."
@@ -48,7 +90,7 @@ export const FirstStep = ({ formData, handleChange, handleNextStep }) => {
           name="lastname"
           value={lastname}
           onChange={handleChange}
-          error={isLastNameValid}
+          // error={() => getErrorMessage(isLastNameValid)}
           required={true}
           label="Last name"
           placeholder="Doe..."
@@ -57,15 +99,27 @@ export const FirstStep = ({ formData, handleChange, handleNextStep }) => {
           name="username"
           value={username}
           onChange={handleChange}
-          error={isUserNameValid}
+          // error={() => getErrorMessage(isUserNameValid)}
           required={true}
           label="User Name"
           placeholder="Johndoe..."
         />
       </div>
       <div className="flex gap-2 my-10">
-        <Button onClick={handleNextStep} disabled={isHavingError()}>
-          Next
+        <Button onClick={isHavingError}>
+          Continue {currentStep}/{totalSteps}{" "}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M9.70498 6L8.29498 7.41L12.875 12L8.29498 16.59L9.70498 18L15.705 12L9.70498 6Z"
+              fill="white"
+            />
+          </svg>
         </Button>
       </div>
     </div>

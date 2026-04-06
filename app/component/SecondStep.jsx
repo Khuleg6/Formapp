@@ -8,8 +8,11 @@ export const SecondStep = ({
   formData,
   handleChange,
   handleNextStep,
+  currentStep,
+  totalSteps,
 }) => {
   const { email, phonenumb, password, confirmpass } = formData;
+  const [isSubmited, setIsSubmited] = useState(false);
 
   const isEmailValid = () => {
     if (email === "") return "Email cannot be empty...";
@@ -44,13 +47,35 @@ export const SecondStep = ({
     // Хэрэв бүх нөхцөл биелсэн бол юу ч буцаахгүй (undefined)
     return null;
   };
+
+  const getErrorMessage = (validationfunc) => {
+    if (!isSubmited) return "";
+    return validationfunc();
+  };
+  const handleNext = () => {
+    setIsSubmited(true);
+    if (
+      !isEmailValid() &&
+      !isPhoneNumValid() &&
+      !isPasswordValid() &&
+      !isConfirmPassValid()
+    ) {
+      handleNextStep();
+    }
+  };
+
   const isConfirmPassValid = () => {
     if (confirmpass === "") return "Please confirm your password.";
     if (confirmpass !== password) return "Passwords do not match.";
     return null;
   };
   const isHavingError = () => {
-    return isEmailValid() || isPhoneNumValid() || isPasswordValid();
+    return (
+      isEmailValid() ||
+      isPhoneNumValid() ||
+      isPasswordValid() ||
+      isConfirmPassValid()
+    );
   };
   return (
     <div className="w-120 min-h-[655px] bg-white rounded-lg p-8 shadow-xl">
@@ -65,16 +90,17 @@ export const SecondStep = ({
           name="email"
           value={email}
           onChange={handleChange}
-          error={isEmailValid}
+          error={() => getErrorMessage(isEmailValid)}
           required={true}
           label="Email"
           placeholder="John@edu.mn"
         />
         <Textfield
           name="phonenumb"
+          type="number"
           value={phonenumb}
           onChange={handleChange}
-          error={isPhoneNumValid}
+          error={() => getErrorMessage(isPhoneNumValid)}
           required={true}
           label="Enter Phone Number"
           placeholder="88888888"
@@ -83,27 +109,57 @@ export const SecondStep = ({
           name="password"
           value={password}
           onChange={handleChange}
-          error={isPasswordValid}
+          error={() => getErrorMessage(isPasswordValid)}
           required={true}
           label="Password"
           type="password"
+          placeholder="********"
         />
         <Textfield
           name="confirmpass"
           value={confirmpass}
-          error={isConfirmPassValid}
+          error={() => getErrorMessage(isConfirmPassValid)}
           onChange={handleChange}
           required={true}
           type="password"
           label="Confirm Password"
+          placeholder="********"
         />
       </div>
       <div className="flex gap-2 my-10">
-        <Button onClick={handlePreviusStep} disabled={false}>
+        <Button
+          className="bg-white text-black border-gray-300"
+          onClick={handlePreviusStep}
+          disabled={false}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M15.705 7.41L14.295 6L8.29504 12L14.295 18L15.705 16.59L11.125 12L15.705 7.41Z"
+              fill="#202124"
+            />
+          </svg>{" "}
           Prev
         </Button>
-        <Button onClick={handleNextStep} disabled={isHavingError()}>
-          Next
+        <Button onClick={handleNext}>
+          Continue {currentStep}/{totalSteps}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M9.70498 6L8.29498 7.41L12.875 12L8.29498 16.59L9.70498 18L15.705 12L9.70498 6Z"
+              fill="white"
+            />
+          </svg>
         </Button>
       </div>
     </div>
