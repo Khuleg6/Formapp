@@ -21,40 +21,62 @@ export const FirstStep = ({
 
   let isValid = true;
 
-  const isFirstNameValid = (firstname) => {
-    if (firstname === "") {
-      setErrors({
-        ...errors,
+  const isFirstNameValid = (value) => {
+    if (value === "") {
+      setErrors((prev) => ({
+        ...prev,
         firstnameError: "First name cannot be empty...",
-      });
+      }));
       isValid = false;
-    } else if (!/^[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,50}$/.test(firstname)) {
-      setErrors({
-        ...errors,
+    } else if (!/^[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,50}$/.test(value)) {
+      setErrors((prev) => ({
+        ...prev,
         firstnameError:
           "First name cannot contain special characters or numbers.",
-      });
+      }));
       isValid = false;
     } else {
-      setErrors({ ...errors, firstnameError: "" });
+      setErrors((prev) => ({ ...prev, firstnameError: "" }));
       isValid = true;
     }
   };
-  const isLastNameValid = () => {
-    if (lastname === "") return "Last name cannot be  ...";
-    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,50}$/.test(lastname))
-      return "Last name cannot contain special characters or numbers.";
+  const isLastNameValid = (value) => {
+    if (value === "") {
+      setErrors((prev) => ({
+        ...prev,
+        lastnameError: "Last name cannot be empty...",
+      }));
+      isValid = false;
+    } else if (!/^[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,50}$/.test(value)) {
+      setErrors((prev) => ({
+        ...prev,
+        lastnameError:
+          "Last name cannot contain special characters or numbers.",
+      }));
+      isValid = false;
+    } else {
+      setErrors((prev) => ({ ...prev, lastnameError: "" }));
+      isValid = true;
+    }
   };
-  const isUserNameValid = () => {
-    if (username === "") return "Username cannot be empty...";
-    if (!/^[a-zA-Z0-9](?:[a-zA-Z0-9_]{1,18}[a-zA-Z0-9])?$/.test(username))
-      return "username cannot start with special characters";
+  const isUserNameValid = (value) => {
+    if (value === "") {
+      setErrors((prev) => ({
+        ...prev,
+        usernameError: "Username cannot be empty...",
+      }));
+      isValid = false;
+    } else if (!/^[a-zA-Z0-9](?:[a-zA-Z0-9_]{1,18}[a-zA-Z0-9])?$/.test(value)) {
+      setErrors((prev) => ({
+        ...prev,
+        usernameError: "username cannot start with special characters",
+      }));
+      isValid = false;
+    } else {
+      setErrors((prev) => ({ ...prev, usernameError: "" }));
+      isValid = true;
+    }
   };
-
-  // const getErrorMessage = (validationfunc) => {
-  //   if (!isSubmited) return "";
-  //   return validationfunc();
-  // };
 
   const isHavingError = () => {
     if (isValid) {
@@ -89,8 +111,11 @@ export const FirstStep = ({
         <Textfield
           name="lastname"
           value={lastname}
-          onChange={handleChange}
-          // error={() => getErrorMessage(isLastNameValid)}
+          onChange={(e) => {
+            setFormData({ ...formData, lastname: e.target.value });
+            isLastNameValid(e.target.value);
+          }}
+          error={errors.lastnameError}
           required={true}
           label="Last name"
           placeholder="Doe..."
@@ -98,15 +123,26 @@ export const FirstStep = ({
         <Textfield
           name="username"
           value={username}
-          onChange={handleChange}
-          // error={() => getErrorMessage(isUserNameValid)}
+          onChange={(e) => {
+            setFormData({ ...formData, username: e.target.value });
+            isUserNameValid(e.target.value);
+          }}
+          error={errors.usernameError}
           required={true}
           label="User Name"
           placeholder="Johndoe..."
         />
       </div>
       <div className="flex gap-2 my-10">
-        <Button onClick={isHavingError}>
+        <Button
+          className="text-white"
+          onClick={() => {
+            isFirstNameValid(firstname);
+            isLastNameValid(lastname);
+            isUserNameValid(username);
+            isHavingError();
+          }}
+        >
           Continue {currentStep}/{totalSteps}{" "}
           <svg
             xmlns="http://www.w3.org/2000/svg"
